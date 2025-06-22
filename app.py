@@ -1,44 +1,78 @@
 import streamlit as st
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin, urlparse, urlunparse
+from collections import defaultdict
 
-# Set page config must be the first Streamlit command
+# ==================================================
+# DARK MODE FIX (Must be first Streamlit command after set_page_config)
+# ==================================================
 st.set_page_config(
     page_title="AI LinkAnalyzer Pro",
     page_icon="🔍",
     layout="wide"
 )
 
-# Now import other libraries
-import requests
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlparse, urlunparse
-from collections import defaultdict
-
-# Custom CSS for better styling
 st.markdown("""
 <style>
+    /* DARK MODE COMPATIBILITY */
+    [data-testid="stAppViewContainer"] {
+        background-color: var(--background-color) !important;
+        color: var(--text-color) !important;
+    }
+    
+    /* Dynamic color variables */
+    :root {
+        --background-color: #ffffff;
+        --text-color: #000000;
+        --secondary-color: #f0f2f6;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --background-color: #0e1117;
+            --text-color: #ffffff;
+            --secondary-color: #1a1a1a;
+        }
+        
+        /* Fix input fields in dark mode */
+        .stTextInput input, .stTextArea textarea, .stSelectbox select {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+        }
+        
+        /* Fix tables in dark mode */
+        .stDataFrame {
+            color: #000000 !important;
+        }
+    }
+    
+    /* YOUR EXISTING STYLES (now using CSS variables) */
     .header-style {
         font-size: 20px;
         font-weight: bold;
-        color: #2c3e50;
+        color: var(--text-color);
         margin-bottom: 10px;
     }
     .subheader-style {
         font-size: 16px;
         font-weight: bold;
-        color: #3498db;
+        color: #3498db; /* Keeping your blue color */
         margin-top: 15px;
     }
     .info-box {
-        background-color: #f8f9fa;
+        background-color: var(--secondary-color);
         border-radius: 5px;
         padding: 15px;
         margin-bottom: 20px;
+        color: var(--text-color);
     }
     .success-box {
         background-color: #e8f5e9;
         border-radius: 5px;
         padding: 15px;
         margin-bottom: 20px;
+        color: #000000; /* Fixed success text color */
     }
     .stButton>button {
         background-color: #4CAF50;
@@ -53,6 +87,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ==================================================
+# REST OF YOUR ORIGINAL CODE (EXACTLY AS IS)
+# ==================================================
 def is_same_domain(url, base):
     return urlparse(url).netloc == urlparse(base).netloc
 
